@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Resistor Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* --- THE VISUAL RESISTOR --- */
+        .resistor-container {
+            margin: 40px auto;
+            position: relative;
+            width: 300px;
+            height: 80px;
+            background-color: #e3d2a4; /* Classic resistor beige */
+            border-radius: 40px;
+            border: 2px solid #bda878;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            align-items: center;
+        }
+
+        /* The wire legs of the resistor */
+        .resistor-container::before, .resistor-container::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 6px;
+            background-color: #999;
+            top: 37px;
+            z-index: -1;
+        }
+        .resistor-container::before { left: -80px; }
+        .resistor-container::after { right: -80px; }
+
+        .band-visual {
+            width: 20px;
+            height: 100%;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- THE CONTROLS & TILES --- */
+        .control-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .band-group {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 220px;
+        }
+
+        .tile {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            color: transparent;
+        }
+
+        .tile:hover {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        /* Output Area */
+        #result-panel {
+            margin-top: 40px;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            font-size: 24px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Utility Color Classes */
+        .c-black { background: black; }
+        .c-brown { background: #8B4513; }
+        .c-red { background: red; }
+        .c-orange { background: orange; }
+        .c-yellow { background: gold; }
+        .c-green { background: green; }
+        .c-blue { background: blue; }
+        .c-violet { background: violet; }
+        .c-gray { background: gray; }
+        .c-white { background: white; border: 2px solid #ccc;}
+        .c-gold { background: #FFD700; }
+        .c-silver { background: #C0C0C0; }
+    </style>
+</head>
+<body>
+
+    <h1>Resistor Color Code Calculator</h1>
+
+    <div class="resistor-container">
+        <div id="vis-band1" class="band-visual"></div>
+        <div id="vis-band2" class="band-visual"></div>
+        <div id="vis-mult" class="band-visual"></div>
+        <div id="vis-tol" class="band-visual" style="margin-left: 30px;"></div>
+    </div>
+
+    <div class="control-section">
+        
+        <div class="band-group">
+            <h3>Band 1 (1st Digit)</h3>
+            <button class="tile c-black" onclick="setBand(1, 'black', 0)"></button>
+            <button class="tile c-brown" onclick="setBand(1, 'brown', 1)"></button>
+            <button class="tile c-red" onclick="setBand(1, 'red', 2)"></button>
+            <button class="tile c-orange" onclick="setBand(1, 'orange', 3)"></button>
+            <button class="tile c-yellow" onclick="setBand(1, 'gold', 4)"></button>
+            <button class="tile c-green" onclick="setBand(1, 'green', 5)"></button>
+            <button class="tile c-blue" onclick="setBand(1, 'blue', 6)"></button>
+            <button class="tile c-violet" onclick="setBand(1, 'violet', 7)"></button>
+            <button class="tile c-gray" onclick="setBand(1, 'gray', 8)"></button>
+            <button class="tile c-white" onclick="setBand(1, 'white', 9)"></button>
+        </div>
+
+        <div class="band-group">
+            <h3>Band 2 (2nd Digit)</h3>
+            <button class="tile c-black" onclick="setBand(2, 'black', 0)"></button>
+            <button class="tile c-brown" onclick="setBand(2, 'brown', 1)"></button>
+            <button class="tile c-red" onclick="setBand(2, 'red', 2)"></button>
+            <button class="tile c-orange" onclick="setBand(2, 'orange', 3)"></button>
+            <button class="tile c-yellow" onclick="setBand(2, 'gold', 4)"></button>
+            <button class="tile c-green" onclick="setBand(2, 'green', 5)"></button>
+            <button class="tile c-blue" onclick="setBand(2, 'blue', 6)"></button>
+            <button class="tile c-violet" onclick="setBand(2, 'violet', 7)"></button>
+            <button class="tile c-gray" onclick="setBand(2, 'gray', 8)"></button>
+            <button class="tile c-white" onclick="setBand(2, 'white', 9)"></button>
+        </div>
+
+        <div class="band-group">
+            <h3>Multiplier</h3>
+            <button class="tile c-black" onclick="setMult('black', 1)"></button>
+            <button class="tile c-brown" onclick="setMult('brown', 10)"></button>
+            <button class="tile c-red" onclick="setMult('red', 100)"></button>
+            <button class="tile c-orange" onclick="setMult('orange', 1000)"></button>
+            <button class="tile c-yellow" onclick="setMult('gold', 10000)"></button>
+            <button class="tile c-green" onclick="setMult('green', 100000)"></button>
+            <button class="tile c-blue" onclick="setMult('blue', 1000000)"></button>
+            <button class="tile c-violet" onclick="setMult('violet', 10000000)"></button>
+            <button class="tile c-gray" onclick="setMult('gray', 100000000)"></button>
+            <button class="tile c-white" onclick="setMult('white', 1000000000)"></button>
+            <button class="tile c-gold" onclick="setMult('gold', 0.1)"></button>
+            <button class="tile c-silver" onclick="setMult('silver', 0.01)"></button>
+        </div>
+
+        <div class="band-group">
+            <h3>Tolerance</h3>
+            <button class="tile c-brown" onclick="setTol('brown', 1)"></button>
+            <button class="tile c-red" onclick="setTol('red', 2)"></button>
+            <button class="tile c-green" onclick="setTol('green', 0.5)"></button>
+            <button class="tile c-blue" onclick="setTol('blue', 0.25)"></button>
+            <button class="tile c-violet" onclick="setTol('violet', 0.1)"></button>
+            <button class="tile c-gray" onclick="setTol('gray', 0.05)"></button>
+            <button class="tile c-gold" onclick="setTol('gold', 5)"></button>
+            <button class="tile c-silver" onclick="setTol('silver', 10)"></button>
+        </div>
+
+    </div>
+
+    <div id="result-panel">
+        Select colors to calculate resistance.
+    </div>
+
+    <script>
+        // Store our current selections. Null means nothing is selected yet.
+        let values = {
+            band1: null,
+            band2: null,
+            multiplier: null,
+            tolerance: null
+        };
+
+        // Handles clicking a tile for Band 1 or Band 2
+        function setBand(bandNum, colorCode, numericValue) {
+            // Update the visual resistor band
+            document.getElementById('vis-band' + bandNum).style.backgroundColor = colorCode;
+            // Save the number to our memory
+            values['band' + bandNum] = numericValue;
+            calculate();
+        }
+
+        // Handles clicking a multiplier tile
+        function setMult(colorCode, numericValue) {
+            document.getElementById('vis-mult').style.backgroundColor = colorCode;
+            values.multiplier = numericValue;
+            calculate();
+        }
+
+        // Handles clicking a tolerance tile
+        function setTol(colorCode, numericValue) {
+            document.getElementById('vis-tol').style.backgroundColor = colorCode;
+            values.tolerance = numericValue;
+            calculate();
+        }
+
+        // The Math Engine
+        function calculate() {
+            // Check if user has selected at least the first 3 bands needed for math
+            if (values.band1 !== null && values.band2 !== null && values.multiplier !== null) {
+                
+                // The main formula: (Band1*10 + Band2) * Multiplier
+                let ohms = ((values.band1 * 10) + values.band2) * values.multiplier;
+                
+                // Format large numbers nicely (e.g., 1000 -> 1 kΩ)
+                let formattedOhms = ohms;
+                let unit = "Ω";
+                
+                if (ohms >= 1000000) {
+                    formattedOhms = ohms / 1000000;
+                    unit = "MΩ";
+                } else if (ohms >= 1000) {
+                    formattedOhms = ohms / 1000;
+                    unit = "kΩ";
+                }
+
+                // If tolerance is selected, add it to the text. Otherwise leave it blank.
+                let tolText = values.tolerance !== null ? ` ±${values.tolerance}%` : "";
+
+                // Update the screen
+                document.getElementById('result-panel').innerText = 
+                    `${formattedOhms} ${unit}${tolText}  (Raw: ${ohms} Ω)`;
+            }
+        }
+    </script>
+</body>
+</html>
