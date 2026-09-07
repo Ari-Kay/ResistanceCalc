@@ -240,7 +240,26 @@
                 // Update the screen
                 document.getElementById('result-panel').innerText = 
                     `${formattedOhms} ${unit}${tolText}  (Raw: ${ohms} Ω)`;
-            }
+                }
+            {
+         // The Reset Engine
+            function resetCalculator() {
+                // 1. Wipe the memory back to null
+                values = {
+                    band1: null,
+                    band2: null,
+                    multiplier: null,
+                    tolerance: null
+                };
+                // 2. Strip the colors off the visual resistor bands
+                document.getElementById('vis-band1').style.backgroundColor = 'transparent';
+                document.getElementById('vis-band2').style.backgroundColor = 'transparent';
+                document.getElementById('vis-mult').style.backgroundColor = 'transparent';
+                document.getElementById('vis-tol').style.backgroundColor = 'transparent';
+    
+                // 3. Reset the text display to the default message
+                document.getElementById('result-panel').innerText = "Select colors to calculate resistance.";
+            } 
         }
     </script>
 </body>
