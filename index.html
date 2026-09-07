@@ -179,7 +179,7 @@
     </div>
 
     <div id="result-panel">
-        Select colors to calculate resistance.
+        Select colors to calculate resistance
     </div>
     
     <!--The Reset Button -->
@@ -249,6 +249,7 @@
                 document.getElementById('result-panel').innerText = 
                     `${formattedOhms} ${unit}${tolText}  (Raw: ${ohms} Ω)`;
                 }
+        }
             {
          // The Reset Engine
             function resetCalculator() {
@@ -267,8 +268,6 @@
     
                 // 3. Reset the text display to the default message
                 document.getElementById('result-panel').innerText = "Select colors to calculate resistance.";
-                }
-            } 
         }
     </script>
 </body>
